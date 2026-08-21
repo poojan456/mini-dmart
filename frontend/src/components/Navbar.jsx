@@ -36,8 +36,8 @@ function Navbar() {
             margin: 0,
             textTransform: 'lowercase'
           }}>
-            <span style={{ color: '#f8cb46' }}>mini</span>
-            <span style={{ color: '#0c8346' }}>dmart</span>
+            <span style={{ color: '#0c8346' }}>mini</span>
+            <span style={{ color: '#2d3748' }}>dmart</span>
           </h2>
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
