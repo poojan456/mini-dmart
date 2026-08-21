@@ -25,24 +25,36 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar">
-      <div className="container">
-        <h2><Link to="/">Mini D-Mart</Link></h2>
-        <div>
-          <Link to="/">Home</Link>
+    <nav className="navbar" style={{ backgroundColor: '#fff', color: '#333', borderBottom: '1px solid #f0f0f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
+      <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          <h2 style={{ 
+            fontFamily: '"Arial Black", Impact, sans-serif', 
+            fontWeight: 900, 
+            fontSize: '34px', 
+            letterSpacing: '-1.5px', 
+            margin: 0,
+            textTransform: 'lowercase'
+          }}>
+            <span style={{ color: '#f8cb46' }}>mini</span>
+            <span style={{ color: '#0c8346' }}>dmart</span>
+          </h2>
+        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <Link to="/" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>Home</Link>
           {token ? (
             <>
-              <Link to="/cart"><ShoppingCart size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Cart</Link>
-              <Link to="/orders">My Orders</Link>
-              <Link to="/profile"><User size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Profile</Link>
-              <button onClick={handleLogout} className="btn" style={{ background: 'transparent', color: 'white', marginLeft: '10px', verticalAlign: 'middle' }}>
-                <LogOut size={18} style={{ display: 'inline', verticalAlign: 'middle' }}/> Logout
+              <Link to="/cart" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}><ShoppingCart size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Cart</Link>
+              <Link to="/orders" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>My Orders</Link>
+              <Link to="/profile" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}><User size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Profile</Link>
+              <button onClick={handleLogout} className="btn" style={{ background: 'transparent', color: '#dc3545', fontWeight: 'bold', marginLeft: '10px', verticalAlign: 'middle', border: '1px solid #dc3545', padding: '6px 12px', borderRadius: '6px' }}>
+                <LogOut size={16} style={{ display: 'inline', verticalAlign: 'middle' }}/> Logout
               </button>
             </>
           ) : (
             <>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
+              <Link to="/login" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>Login</Link>
+              <Link to="/register" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>Register</Link>
             </>
           )}
         </div>
