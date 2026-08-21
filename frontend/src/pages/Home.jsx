@@ -12,22 +12,20 @@ function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
 
+  const [quantities, setQuantities] = useState({});
+
   useEffect(() => {
     fetchProducts();
   }, []);
 
   useEffect(() => {
-    // Apply local filtering
     let result = products;
-    
     if (selectedCategory !== 'ALL') {
       result = result.filter(p => p.category === selectedCategory);
     }
-    
     if (searchTerm.trim() !== '') {
       result = result.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
     }
-    
     setFilteredProducts(result);
   }, [searchTerm, selectedCategory, products]);
 
@@ -36,11 +34,27 @@ function Home() {
       const response = await api.get('/products');
       setProducts(response.data);
       setFilteredProducts(response.data);
+      
+      // Initialize quantities to 1
+      const initialQtys = {};
+      response.data.forEach(p => initialQtys[p.id] = 1);
+      setQuantities(initialQtys);
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleQtyChange = (productId, delta, maxStock) => {
+    setQuantities(prev => {
+      const current = prev[productId] || 1;
+      const next = current + delta;
+      if (next >= 1 && next <= maxStock) {
+        return { ...prev, [productId]: next };
+      }
+      return prev;
+    });
   };
 
   const handleAddToCart = (product) => {
@@ -49,31 +63,34 @@ function Home() {
       return;
     }
 
+    const qtyToAdd = quantities[product.id] || 1;
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const existingItem = cart.find(item => item.productId === product.id);
     
     if (existingItem) {
-      if (existingItem.quantity >= product.stockQuantity) {
-        Swal.fire('Stock Limit', 'You cannot add more than available stock.', 'warning');
+      if (existingItem.quantity + qtyToAdd > product.stockQuantity) {
+        Swal.fire('Stock Limit', `You cannot add more than ${product.stockQuantity} items in total.`, 'warning');
         return;
       }
-      existingItem.quantity += 1;
+      existingItem.quantity += qtyToAdd;
     } else {
-      cart.push({ productId: product.id, name: product.name, price: product.price, quantity: 1, maxStock: product.stockQuantity });
+      cart.push({ productId: product.id, name: product.name, price: product.price, quantity: qtyToAdd, maxStock: product.stockQuantity });
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
     
     Swal.fire({
       title: 'Added to Cart!',
-      text: `${product.name} has been added.`,
+      text: `${qtyToAdd}x ${product.name} added to your shopping cart.`,
       icon: 'success',
       timer: 1500,
       showConfirmButton: false
     });
+    
+    // Reset quantity back to 1
+    setQuantities(prev => ({ ...prev, [product.id]: 1 }));
   };
 
-  // Extract unique categories for the dropdown
   const categories = ['ALL', ...new Set(products.map(p => p.category).filter(Boolean))];
 
   if (loading) {
@@ -85,7 +102,6 @@ function Home() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', marginBottom: '20px', gap: '15px' }}>
         <h2 style={{ color: 'var(--primary-color)', margin: 0 }}>Fresh Groceries</h2>
         
-        {/* Search and Filter Bar */}
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: 1, justifyContent: 'flex-end' }}>
           <div style={{ position: 'relative', maxWidth: '300px', width: '100%' }}>
             <Search size={18} style={{ position: 'absolute', left: '10px', top: '12px', color: '#888' }} />
@@ -133,7 +149,7 @@ function Home() {
               <h3 style={{ fontSize: '18px', marginBottom: '5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.name}</h3>
               <p style={{ color: '#666', fontSize: '13px', flexGrow: 1 }}>{product.category}</p>
               
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', marginBottom: '15px' }}>
                 <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--primary-color)' }}>
                   ${product.price.toFixed(2)}
                 </span>
@@ -141,11 +157,26 @@ function Home() {
                   {product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of Stock'}
                 </span>
               </div>
+              
+              {/* Quantity Selector inside the box */}
+              {product.stockQuantity > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '15px', backgroundColor: '#f9f9f9', padding: '5px', borderRadius: '8px' }}>
+                  <button 
+                    style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--primary-color)', padding: '0 10px' }}
+                    onClick={(e) => { e.stopPropagation(); handleQtyChange(product.id, -1, product.stockQuantity); }}
+                  >-</button>
+                  <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{quantities[product.id] || 1}</span>
+                  <button 
+                    style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--primary-color)', padding: '0 10px' }}
+                    onClick={(e) => { e.stopPropagation(); handleQtyChange(product.id, 1, product.stockQuantity); }}
+                  >+</button>
+                </div>
+              )}
 
               <button 
                 className="btn btn-primary" 
-                style={{ width: '100%', marginTop: '15px', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}
-                onClick={() => handleAddToCart(product)}
+                style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}
+                onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
                 disabled={product.stockQuantity <= 0}
               >
                 <ShoppingCart size={18} /> {product.stockQuantity > 0 ? 'Add to Cart' : 'Unavailable'}
