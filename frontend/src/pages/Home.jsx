@@ -107,7 +107,7 @@ function Home() {
       id: 2,
       title: "Mega Pantry Clearance",
       subtitle: "Save up to 40% on rice, wheat, oils, and daily pantry staples",
-      bgColor: "#d84315",
+      bgColor: "#43a047", // Changed from red/orange to a fresh green shade
       imgUrl: "https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     },
     {
