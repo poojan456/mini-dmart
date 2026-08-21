@@ -36,7 +36,7 @@ const Footer = () => {
           <h4 style={{ color: '#fff', marginBottom: '20px', fontSize: '18px' }}>Contact Us</h4>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, color: '#ccc', fontSize: '14px', lineHeight: '1.6' }}>
             <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>📍 123 Grocery Lane, Market City</li>
-            <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>📞 +91 98765 43210</li>
+            <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>📞 +91 8626048783</li>
             <li style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>✉️ support@minidmart.com</li>
           </ul>
         </div>
