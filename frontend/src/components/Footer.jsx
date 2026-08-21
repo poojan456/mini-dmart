@@ -50,7 +50,7 @@ const Footer = () => {
         color: '#888', 
         fontSize: '14px' 
       }}>
-        © {new Date().getFullYear()} Mini D-Mart. All rights reserved. Built with React & Spring Boot.
+        © {new Date().getFullYear()} Mini D-Mart. All rights reserved.
       </div>
     </footer>
   );
