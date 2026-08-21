@@ -24,10 +24,10 @@ function AdminOrders() {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      await api.put(\`/orders/\${orderId}/status\`, { status: newStatus });
+      await api.put(`/orders/${orderId}/status`, { status: newStatus });
       Swal.fire({
         title: 'Status Updated',
-        text: \`Order #\${orderId} is now \${newStatus}\`,
+        text: `Order #${orderId} is now ${newStatus}`,
         icon: 'success',
         toast: true,
         position: 'top-end',

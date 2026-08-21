@@ -87,7 +87,7 @@ function AdminProducts() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await api.put(\`/products/\${product.id}\`, result.value);
+          await api.put(`/products/${product.id}`, result.value);
           Swal.fire('Updated!', 'Product has been updated.', 'success');
           fetchProducts();
         } catch (err) {
@@ -109,7 +109,7 @@ function AdminProducts() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await api.delete(\`/products/\${id}\`);
+          await api.delete(`/products/${id}`);
           Swal.fire('Deleted!', 'Product has been deleted.', 'success');
           fetchProducts();
         } catch (err) {

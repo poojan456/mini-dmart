@@ -25,10 +25,10 @@ function AdminReturns() {
 
   const handleAction = async (id, status) => {
     try {
-      await api.put(\`/returns/\${id}/status\`, { status });
+      await api.put(`/returns/${id}/status`, { status });
       Swal.fire({
         title: 'Status Updated',
-        text: \`Return request has been \${status.toLowerCase()}\`,
+        text: `Return request has been ${status.toLowerCase()}`,
         icon: 'success',
         toast: true,
         position: 'top-end',
