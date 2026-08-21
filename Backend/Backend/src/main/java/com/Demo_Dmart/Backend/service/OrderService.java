@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,7 +35,6 @@ public class OrderService {
 
         Order order = new Order();
         order.setUser(user);
-        order.setOrderDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
         
         try {
@@ -45,8 +42,6 @@ public class OrderService {
         } catch (IllegalArgumentException | NullPointerException e) {
             order.setDeliveryType(DeliveryType.STORE_PICKUP);
         }
-
-        order.setShippingAddress(orderRequest.getShippingAddress());
         
         Order savedOrder = orderRepository.save(order);
         
@@ -56,18 +51,18 @@ public class OrderService {
             Product product = productRepository.findById(itemReq.getProductId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
                     
-            if (product.getQuantity() < itemReq.getQuantity()) {
+            if (product.getStockQuantity() < itemReq.getQuantity()) {
                 throw new RuntimeException("Not enough stock for product: " + product.getName());
             }
             
-            product.setQuantity(product.getQuantity() - itemReq.getQuantity());
+            product.setStockQuantity(product.getStockQuantity() - itemReq.getQuantity());
             productRepository.save(product);
             
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(savedOrder);
             orderItem.setProduct(product);
             orderItem.setQuantity(itemReq.getQuantity());
-            orderItem.setPrice(product.getPrice());
+            orderItem.setPriceAtPurchase(product.getPrice());
             
             orderItemRepository.save(orderItem);
             
