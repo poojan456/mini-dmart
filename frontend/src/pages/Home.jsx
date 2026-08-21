@@ -108,14 +108,14 @@ function Home() {
       title: "Mega Pantry Clearance",
       subtitle: "Save up to 40% on rice, wheat, oils, and daily pantry staples",
       bgColor: "#d84315",
-      imgUrl: "https://upload.wikimedia.org/wikipedia/commons/4/41/Supermarket_produce_aisle.jpg"
+      imgUrl: "https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     },
     {
       id: 3,
       title: "Express Home Delivery",
       subtitle: "Order now and get your groceries delivered at lightning speed",
       bgColor: "#0277bd",
-      imgUrl: "https://upload.wikimedia.org/wikipedia/commons/3/30/Delivery_truck_icon.svg"
+      imgUrl: "https://images.pexels.com/photos/4391470/pexels-photo-4391470.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
     }
   ];
 
