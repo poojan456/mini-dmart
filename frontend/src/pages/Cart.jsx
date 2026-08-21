@@ -91,7 +91,7 @@ function Cart() {
             <div className="card" key={item.productId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <h3 style={{ fontSize: '18px' }}>{item.name}</h3>
-                <p style={{ color: 'var(--primary-color)', fontWeight: 'bold' }}>${item.price.toFixed(2)}</p>
+                <p style={{ color: 'var(--primary-color)', fontWeight: 'bold' }}>₹{item.price.toFixed(2)}</p>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                 <button className="btn" style={{ padding: '5px 10px' }} onClick={() => handleQuantityChange(item.productId, item.quantity - 1, item.maxStock)}>-</button>
@@ -137,7 +137,7 @@ function Cart() {
 
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '20px', fontWeight: 'bold', margin: '20px 0' }}>
             <span>Total:</span>
-            <span>${calculateTotal()}</span>
+            <span>₹{calculateTotal()}</span>
           </div>
 
           <button className="btn btn-primary" style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }} onClick={handleCheckout}>

@@ -142,6 +142,7 @@ function Home() {
                 <img 
                   src={product.imageUrl || "https://img.freepik.com/free-vector/grocery-cart-with-items_23-2148270146.jpg"} 
                   alt={product.name} 
+                  onError={(e) => { e.target.onerror = null; e.target.src="https://img.freepik.com/free-vector/grocery-cart-with-items_23-2148270146.jpg" }}
                   style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
                 />
               </div>
@@ -151,7 +152,7 @@ function Home() {
               
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', marginBottom: '15px' }}>
                 <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--primary-color)' }}>
-                  ${product.price.toFixed(2)}
+                  ₹{product.price.toFixed(2)}
                 </span>
                 <span style={{ fontSize: '13px', padding: '4px 8px', borderRadius: '12px', backgroundColor: product.stockQuantity > 0 ? '#e8f5e9' : '#ffebee', color: product.stockQuantity > 0 ? '#2e7d32' : '#c62828', fontWeight: '500' }}>
                   {product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of Stock'}

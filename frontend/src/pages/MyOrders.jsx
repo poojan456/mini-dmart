@@ -98,7 +98,7 @@ function MyOrders() {
                     {order.status}
                   </span>
                   <p style={{ marginTop: '8px', fontWeight: 'bold', fontSize: '18px', color: 'var(--text-dark)' }}>
-                    ${order.totalAmount?.toFixed(2)}
+                    ₹{order.totalAmount?.toFixed(2)}
                   </p>
                 </div>
               </div>
@@ -112,7 +112,7 @@ function MyOrders() {
                         <span style={{ fontWeight: '500' }}>{item.product?.name}</span>
                         <span style={{ color: '#888', fontSize: '12px' }}>x{item.quantity}</span>
                       </span>
-                      <span style={{ fontWeight: '500' }}>${(item.priceAtPurchase * item.quantity).toFixed(2)}</span>
+                      <span style={{ fontWeight: '500' }}>₹{(item.priceAtPurchase * item.quantity).toFixed(2)}</span>
                     </li>
                   ))}
                 </ul>
