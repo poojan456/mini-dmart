@@ -32,9 +32,10 @@ function Navbar() {
           <Link to="/">Home</Link>
           {token ? (
             <>
+              <Link to="/cart"><ShoppingCart size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Cart</Link>
               <Link to="/orders">My Orders</Link>
-              <button onClick={handleLogout} className="btn" style={{ background: 'transparent', color: 'white', marginLeft: '10px' }}>
-                <LogOut size={18} /> Logout
+              <button onClick={handleLogout} className="btn" style={{ background: 'transparent', color: 'white', marginLeft: '10px', verticalAlign: 'middle' }}>
+                <LogOut size={18} style={{ display: 'inline', verticalAlign: 'middle' }}/> Logout
               </button>
             </>
           ) : (
