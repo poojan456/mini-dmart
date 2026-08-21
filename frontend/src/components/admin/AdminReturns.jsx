@@ -41,6 +41,14 @@ function AdminReturns() {
     }
   };
 
+  const formatDate = (dateData) => {
+    if (!dateData) return 'Unknown';
+    if (Array.isArray(dateData)) {
+      return new Date(dateData[0], dateData[1] - 1, dateData[2], dateData[3] || 0, dateData[4] || 0).toLocaleString();
+    }
+    return new Date(dateData).toLocaleString();
+  };
+
   if (loading) return <div>Loading returns...</div>;
 
   return (
@@ -65,8 +73,8 @@ function AdminReturns() {
               <tr key={req.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={tdStyle}>#{req.id}</td>
                 <td style={tdStyle}>#{req.order?.id}</td>
-                <td style={tdStyle}>{new Date(req.requestDate).toLocaleDateString()}</td>
-                <td style={tdStyle}>{req.user?.email || 'Unknown'}</td>
+                <td style={tdStyle}>{formatDate(req.requestDate)}</td>
+                <td style={tdStyle}>{req.order?.user?.email || 'Unknown'}</td>
                 <td style={tdStyle}>{req.reason}</td>
                 <td style={tdStyle}>
                   <span style={{ 

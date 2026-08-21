@@ -51,6 +51,14 @@ function AdminOrders() {
     }
   };
 
+  const formatDate = (dateData) => {
+    if (!dateData) return 'Unknown';
+    if (Array.isArray(dateData)) {
+      return new Date(dateData[0], dateData[1] - 1, dateData[2], dateData[3] || 0, dateData[4] || 0).toLocaleString();
+    }
+    return new Date(dateData).toLocaleString();
+  };
+
   if (loading) return <div>Loading orders...</div>;
 
   return (
@@ -62,7 +70,7 @@ function AdminOrders() {
           <thead>
             <tr style={{ backgroundColor: '#f4fbe9', color: '#0c8346' }}>
               <th style={thStyle}>Order ID</th>
-              <th style={thStyle}>Date</th>
+              <th style={thStyle}>Placed Date</th>
               <th style={thStyle}>Customer Email</th>
               <th style={thStyle}>Total Amount</th>
               <th style={thStyle}>Status</th>
@@ -73,7 +81,7 @@ function AdminOrders() {
             {orders.map(order => (
               <tr key={order.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={tdStyle}>#{order.id}</td>
-                <td style={tdStyle}>{new Date(order.orderDate).toLocaleDateString()}</td>
+                <td style={tdStyle}>{formatDate(order.orderDate)}</td>
                 <td style={tdStyle}>{order.user?.email || 'Unknown'}</td>
                 <td style={tdStyle}>₹{order.totalAmount.toFixed(2)}</td>
                 <td style={tdStyle}>
@@ -91,8 +99,10 @@ function AdminOrders() {
                     onChange={(e) => handleStatusChange(order.id, e.target.value)}
                     style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ccc' }}
                   >
-                    <option value="PLACED">PLACED</option>
-                    <option value="SHIPPED">SHIPPED</option>
+                    <option value="PENDING">PENDING</option>
+                    <option value="PREPARING">PREPARING</option>
+                    <option value="READY_FOR_PICKUP">READY FOR PICKUP</option>
+                    <option value="OUT_FOR_DELIVERY">OUT FOR DELIVERY</option>
                     <option value="DELIVERED">DELIVERED</option>
                     <option value="CANCELLED">CANCELLED</option>
                   </select>

@@ -222,9 +222,10 @@ function Home() {
             <div key={product.id} style={{ 
               display: 'flex', flexDirection: 'column', padding: '12px', 
               border: '1px solid #f0f0f0', borderRadius: '10px', backgroundColor: '#fff',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.02)', position: 'relative', transition: 'box-shadow 0.2s',
-              cursor: 'pointer'
-            }} onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'} onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.02)'}>
+              boxShadow: '0 2px 4px rgba(0,0,0,0.02)', position: 'relative', transition: 'box-shadow 0.2s, transform 0.2s ease-in-out',
+              cursor: 'pointer', transform: 'scale(1)'
+            }} onMouseEnter={(e) => { e.currentTarget.style.boxShadow = '0 8px 16px rgba(0,0,0,0.1)'; e.currentTarget.style.transform = 'scale(1.03)'; }} 
+               onMouseLeave={(e) => { e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.02)'; e.currentTarget.style.transform = 'scale(1)'; }}>
               
               {/* Image Section */}
               <div style={{ height: '140px', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
