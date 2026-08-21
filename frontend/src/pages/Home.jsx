@@ -140,9 +140,9 @@ function Home() {
             <div className="card" key={product.id} style={{ display: 'flex', flexDirection: 'column', padding: '15px', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
               <div style={{ height: '200px', width: '100%', marginBottom: '15px', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: '8px' }}>
                 <img 
-                  src={product.imageUrl || "https://img.freepik.com/free-vector/grocery-cart-with-items_23-2148270146.jpg"} 
+                  src={product.imageUrl || `https://placehold.co/600x400/f4f6f8/0c8346?text=${encodeURIComponent(product.name)}`} 
                   alt={product.name} 
-                  onError={(e) => { e.target.onerror = null; e.target.src="https://img.freepik.com/free-vector/grocery-cart-with-items_23-2148270146.jpg" }}
+                  onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/f4f6f8/0c8346?text=${encodeURIComponent(product.name)}` }}
                   style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
                 />
               </div>
