@@ -24,6 +24,16 @@ function Navbar() {
     });
   };
 
+  let isAdmin = false;
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      isAdmin = payload.roles && payload.roles.includes('ROLE_ADMIN');
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
   return (
     <nav className="navbar" style={{ backgroundColor: '#fff', color: '#333', borderBottom: '1px solid #f0f0f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -42,6 +52,11 @@ function Navbar() {
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
           <Link to="/" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>Home</Link>
+          {isAdmin && (
+            <Link to="/admin" style={{ color: '#0c8346', textDecoration: 'none', fontWeight: 'bold', backgroundColor: '#e8f5e9', padding: '4px 10px', borderRadius: '4px' }}>
+              Admin Panel
+            </Link>
+          )}
           {token ? (
             <>
               <Link to="/cart" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}><ShoppingCart size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Cart</Link>
