@@ -34,6 +34,7 @@ function Navbar() {
             <>
               <Link to="/cart"><ShoppingCart size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Cart</Link>
               <Link to="/orders">My Orders</Link>
+              <Link to="/profile"><User size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Profile</Link>
               <button onClick={handleLogout} className="btn" style={{ background: 'transparent', color: 'white', marginLeft: '10px', verticalAlign: 'middle' }}>
                 <LogOut size={18} style={{ display: 'inline', verticalAlign: 'middle' }}/> Logout
               </button>

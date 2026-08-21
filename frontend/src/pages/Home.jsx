@@ -1,26 +1,43 @@
 import { useState, useEffect } from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Search, Filter } from 'lucide-react';
 import Swal from 'sweetalert2';
 import api from '../api/axiosConfig';
 
 function Home() {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Search & Filter state
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    // Apply local filtering
+    let result = products;
+    
+    if (selectedCategory !== 'ALL') {
+      result = result.filter(p => p.category === selectedCategory);
+    }
+    
+    if (searchTerm.trim() !== '') {
+      result = result.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+    
+    setFilteredProducts(result);
+  }, [searchTerm, selectedCategory, products]);
+
   const fetchProducts = async () => {
     try {
-      // Assuming you have an authenticated token to fetch products
       const response = await api.get('/products');
       setProducts(response.data);
+      setFilteredProducts(response.data);
     } catch (err) {
       console.error(err);
-      if(err.response?.status === 401 || err.response?.status === 403) {
-         Swal.fire('Session Expired', 'Please login to view products', 'warning');
-      }
     } finally {
       setLoading(false);
     }
@@ -32,11 +49,14 @@ function Home() {
       return;
     }
 
-    // Basic Cart implementation using LocalStorage for now
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     const existingItem = cart.find(item => item.productId === product.id);
     
     if (existingItem) {
+      if (existingItem.quantity >= product.stockQuantity) {
+        Swal.fire('Stock Limit', 'You cannot add more than available stock.', 'warning');
+        return;
+      }
       existingItem.quantity += 1;
     } else {
       cart.push({ productId: product.id, name: product.name, price: product.price, quantity: 1, maxStock: product.stockQuantity });
@@ -46,12 +66,15 @@ function Home() {
     
     Swal.fire({
       title: 'Added to Cart!',
-      text: `${product.name} has been added to your shopping cart.`,
+      text: `${product.name} has been added.`,
       icon: 'success',
       timer: 1500,
       showConfirmButton: false
     });
   };
+
+  // Extract unique categories for the dropdown
+  const categories = ['ALL', ...new Set(products.map(p => p.category).filter(Boolean))];
 
   if (loading) {
     return <div className="container" style={{ textAlign: 'center', marginTop: '50px' }}><h3>Loading Products...</h3></div>;
@@ -59,31 +82,63 @@ function Home() {
 
   return (
     <div className="container">
-      <h2 style={{ marginBottom: '20px', color: 'var(--primary-color)' }}>Fresh Groceries</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', marginBottom: '20px', gap: '15px' }}>
+        <h2 style={{ color: 'var(--primary-color)', margin: 0 }}>Fresh Groceries</h2>
+        
+        {/* Search and Filter Bar */}
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: 1, justifyContent: 'flex-end' }}>
+          <div style={{ position: 'relative', maxWidth: '300px', width: '100%' }}>
+            <Search size={18} style={{ position: 'absolute', left: '10px', top: '12px', color: '#888' }} />
+            <input 
+              type="text" 
+              className="form-control" 
+              placeholder="Search products..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ paddingLeft: '35px' }}
+            />
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <Filter size={18} color="#888" />
+            <select 
+              className="form-control" 
+              value={selectedCategory} 
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              style={{ width: 'auto', minWidth: '150px' }}
+            >
+              {categories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
       
-      {products.length === 0 ? (
-        <div className="card" style={{ textAlign: 'center' }}>
-          <p>No products available at the moment.</p>
-          <p style={{ fontSize: '14px', color: '#666' }}>(Admin needs to add products via API)</p>
+      {filteredProducts.length === 0 ? (
+        <div className="card" style={{ textAlign: 'center', padding: '40px' }}>
+          <p>No products found matching your criteria.</p>
         </div>
       ) : (
         <div className="grid">
-          {products.map(product => (
-            <div className="card" key={product.id} style={{ display: 'flex', flexDirection: 'column' }}>
-              <img 
-                src={product.imageUrl || "https://img.freepik.com/free-vector/grocery-cart-with-items_23-2148270146.jpg"} 
-                alt={product.name} 
-                className="product-img" 
-              />
-              <h3 style={{ fontSize: '18px', marginBottom: '5px' }}>{product.name}</h3>
-              <p style={{ color: '#666', fontSize: '14px', flexGrow: 1 }}>{product.category}</p>
+          {filteredProducts.map(product => (
+            <div className="card" key={product.id} style={{ display: 'flex', flexDirection: 'column', padding: '15px', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
+              <div style={{ height: '200px', width: '100%', marginBottom: '15px', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: '8px' }}>
+                <img 
+                  src={product.imageUrl || "https://img.freepik.com/free-vector/grocery-cart-with-items_23-2148270146.jpg"} 
+                  alt={product.name} 
+                  style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                />
+              </div>
               
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px' }}>
+              <h3 style={{ fontSize: '18px', marginBottom: '5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.name}</h3>
+              <p style={{ color: '#666', fontSize: '13px', flexGrow: 1 }}>{product.category}</p>
+              
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
                 <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--primary-color)' }}>
                   ${product.price.toFixed(2)}
                 </span>
-                <span style={{ fontSize: '14px', color: product.stockQuantity > 0 ? 'green' : 'red' }}>
-                  {product.stockQuantity > 0 ? `In Stock: ${product.stockQuantity}` : 'Out of Stock'}
+                <span style={{ fontSize: '13px', padding: '4px 8px', borderRadius: '12px', backgroundColor: product.stockQuantity > 0 ? '#e8f5e9' : '#ffebee', color: product.stockQuantity > 0 ? '#2e7d32' : '#c62828', fontWeight: '500' }}>
+                  {product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of Stock'}
                 </span>
               </div>
 
@@ -93,7 +148,7 @@ function Home() {
                 onClick={() => handleAddToCart(product)}
                 disabled={product.stockQuantity <= 0}
               >
-                <ShoppingCart size={18} /> Add to Cart
+                <ShoppingCart size={18} /> {product.stockQuantity > 0 ? 'Add to Cart' : 'Unavailable'}
               </button>
             </div>
           ))}
