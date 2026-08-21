@@ -126,6 +126,12 @@ function Home() {
     return () => clearInterval(timer);
   }, [banners.length]);
 
+  // Helper to extract size/weight for Blinkit style display
+  const extractSize = (name) => {
+    const match = name.match(/(\d+\s*(kg|g|L|ml|Pack|Dozen|Rolls|lb|oz))/i);
+    return match ? match[0] : '1 unit';
+  };
+
   if (loading) {
     return <div className="container" style={{ textAlign: 'center', marginTop: '50px' }}><h3>Loading Products...</h3></div>;
   }
@@ -176,7 +182,7 @@ function Home() {
       {/* --- END HERO BANNER --- */}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', marginBottom: '20px', gap: '15px' }}>
-        <h2 style={{ color: 'var(--primary-color)', margin: 0 }}>Fresh Groceries</h2>
+        <h2 style={{ color: 'var(--primary-color)', margin: 0 }}>Dairy & Breakfast</h2>
         
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: 1, justifyContent: 'flex-end' }}>
           <div style={{ position: 'relative', maxWidth: '300px', width: '100%' }}>
@@ -211,53 +217,90 @@ function Home() {
           <p>No products found matching your criteria.</p>
         </div>
       ) : (
-        <div className="grid">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '15px' }}>
           {filteredProducts.map(product => (
-            <div className="card" key={product.id} style={{ display: 'flex', flexDirection: 'column', padding: '15px', transition: 'transform 0.2s', cursor: 'pointer' }} onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'} onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}>
-              <div style={{ height: '200px', width: '100%', marginBottom: '15px', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: '8px' }}>
+            <div key={product.id} style={{ 
+              display: 'flex', flexDirection: 'column', padding: '12px', 
+              border: '1px solid #f0f0f0', borderRadius: '10px', backgroundColor: '#fff',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.02)', position: 'relative', transition: 'box-shadow 0.2s',
+              cursor: 'pointer'
+            }} onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'} onMouseLeave={(e) => e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.02)'}>
+              
+              {/* Image Section */}
+              <div style={{ height: '140px', position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <img 
                   src={product.imageUrl || `https://placehold.co/600x400/f4f6f8/0c8346?text=${encodeURIComponent(product.name)}`} 
-                  alt={product.name} 
+                  alt={product.name}
+                  style={{ 
+                    maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', 
+                    opacity: product.stockQuantity <= 0 ? 0.3 : 1 
+                  }}
                   onError={(e) => { e.target.onerror = null; e.target.src=`https://placehold.co/600x400/f4f6f8/0c8346?text=${encodeURIComponent(product.name)}` }}
-                  style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
                 />
+                {product.stockQuantity <= 0 && (
+                  <div style={{
+                    position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                    backgroundColor: '#888', color: 'white', padding: '4px 8px', borderRadius: '4px',
+                    fontSize: '12px', fontWeight: 'bold', whiteSpace: 'nowrap'
+                  }}>
+                    Out of Stock
+                  </div>
+                )}
               </div>
-              
-              <h3 style={{ fontSize: '18px', marginBottom: '5px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{product.name}</h3>
-              <p style={{ color: '#666', fontSize: '13px', flexGrow: 1 }}>{product.category}</p>
-              
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px', marginBottom: '15px' }}>
-                <span style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--primary-color)' }}>
-                  ₹{product.price.toFixed(2)}
-                </span>
-                <span style={{ fontSize: '13px', padding: '4px 8px', borderRadius: '12px', backgroundColor: product.stockQuantity > 0 ? '#e8f5e9' : '#ffebee', color: product.stockQuantity > 0 ? '#2e7d32' : '#c62828', fontWeight: '500' }}>
-                  {product.stockQuantity > 0 ? `${product.stockQuantity} in stock` : 'Out of Stock'}
-                </span>
-              </div>
-              
-              {/* Quantity Selector inside the box */}
-              {product.stockQuantity > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '15px', marginBottom: '15px', backgroundColor: '#f9f9f9', padding: '5px', borderRadius: '8px' }}>
-                  <button 
-                    style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--primary-color)', padding: '0 10px' }}
-                    onClick={(e) => { e.stopPropagation(); handleQtyChange(product.id, -1, product.stockQuantity); }}
-                  >-</button>
-                  <span style={{ fontWeight: 'bold', fontSize: '16px' }}>{quantities[product.id] || 1}</span>
-                  <button 
-                    style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: 'var(--primary-color)', padding: '0 10px' }}
-                    onClick={(e) => { e.stopPropagation(); handleQtyChange(product.id, 1, product.stockQuantity); }}
-                  >+</button>
-                </div>
-              )}
 
-              <button 
-                className="btn btn-primary" 
-                style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px' }}
-                onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
-                disabled={product.stockQuantity <= 0}
-              >
-                <ShoppingCart size={18} /> {product.stockQuantity > 0 ? 'Add to Cart' : 'Unavailable'}
-              </button>
+              {/* Meta Info */}
+              <div style={{ marginTop: '12px', flexGrow: 1 }}>
+                <div style={{ 
+                  fontSize: '10px', color: '#444', backgroundColor: '#f4f4f4', 
+                  display: 'inline-flex', alignItems: 'center', padding: '3px 6px', 
+                  borderRadius: '4px', fontWeight: '700', gap: '4px' 
+                }}>
+                  ⏱ 23 MINS
+                </div>
+                
+                <div style={{ 
+                  fontSize: '14px', fontWeight: '600', color: '#222', marginTop: '8px',
+                  lineHeight: '1.3', height: '36px', overflow: 'hidden', 
+                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical'
+                }}>
+                  {product.name}
+                </div>
+
+                <div style={{ fontSize: '12px', color: '#777', marginTop: '6px' }}>
+                  {extractSize(product.name)}
+                </div>
+              </div>
+
+              {/* Price & Add Button */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px' }}>
+                <div style={{ fontSize: '15px', fontWeight: '600', color: '#222' }}>
+                  ₹{product.price.toFixed(0)}
+                </div>
+                
+                {product.stockQuantity > 0 ? (
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); handleAddToCart(product); }}
+                    style={{
+                      border: '1px solid #318616', color: '#318616', backgroundColor: '#f4fbe9',
+                      padding: '6px 18px', borderRadius: '6px', fontWeight: 'bold', 
+                      fontSize: '13px', cursor: 'pointer', textTransform: 'uppercase'
+                    }}
+                  >
+                    ADD
+                  </button>
+                ) : (
+                  <button 
+                    disabled
+                    style={{
+                      border: '1px solid #ccc', color: '#999', backgroundColor: '#f9f9f9',
+                      padding: '6px 18px', borderRadius: '6px', fontWeight: 'bold', 
+                      fontSize: '13px', cursor: 'not-allowed', textTransform: 'uppercase'
+                    }}
+                  >
+                    ADD
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
