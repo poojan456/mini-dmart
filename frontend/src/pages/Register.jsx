@@ -12,16 +12,31 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!name.trim()) {
+      Swal.fire('Validation Error', 'Full Name is required.', 'error');
+      return;
+    }
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      Swal.fire('Validation Error', 'Please enter a valid email address.', 'error');
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      Swal.fire('Validation Error', 'Password must be at least 8 characters long, and include an uppercase letter, a lowercase letter, a number, and a special character.', 'error');
+      return;
+    }
+
     if (password !== confirmPassword) {
-      Swal.fire('Error', 'Passwords do not match', 'error');
+      Swal.fire('Validation Error', 'Passwords do not match.', 'error');
       return;
     }
     
     try {
       const payload = { name, email, password };
-      if (document.getElementById('admin-checkbox') && document.getElementById('admin-checkbox').checked) {
-        payload.role = 'ADMIN';
-      }
       
       const res = await api.post('/auth/register', payload);
       if (res.data.token) {
@@ -45,8 +60,9 @@ function Register() {
               type="text" 
               className="form-control" 
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
               required 
+              title="Only letters and spaces are allowed"
             />
           </div>
           <div className="form-group">
@@ -78,11 +94,6 @@ function Register() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required 
             />
-          </div>
-          
-          <div className="form-group" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <input type="checkbox" id="admin-checkbox" />
-            <label htmlFor="admin-checkbox" style={{ margin: 0, fontSize: '14px', color: '#666' }}>Register as Administrator</label>
           </div>
           
           <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '10px' }}>

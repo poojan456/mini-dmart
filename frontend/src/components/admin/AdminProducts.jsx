@@ -38,23 +38,34 @@ function AdminProducts() {
       showCancelButton: true,
       confirmButtonColor: '#0c8346',
       preConfirm: () => {
+        const name = document.getElementById('swal-input-name').value.trim();
+        const price = parseFloat(document.getElementById('swal-input-price').value);
+        const stockQuantity = parseInt(document.getElementById('swal-input-stock').value);
+        const category = document.getElementById('swal-input-cat').value.trim();
+        
+        if (!name || isNaN(price) || isNaN(stockQuantity) || !category) {
+          Swal.showValidationMessage('Please fill out Name, Price, Stock, and Category');
+          return false;
+        }
+
         return {
-          name: document.getElementById('swal-input-name').value,
-          description: document.getElementById('swal-input-desc').value,
-          price: parseFloat(document.getElementById('swal-input-price').value),
-          stockQuantity: parseInt(document.getElementById('swal-input-stock').value),
-          category: document.getElementById('swal-input-cat').value,
-          imageUrl: document.getElementById('swal-input-img').value
+          name,
+          description: document.getElementById('swal-input-desc').value.trim(),
+          price,
+          stockQuantity,
+          category,
+          imageUrl: document.getElementById('swal-input-img').value.trim()
         }
       }
     }).then(async (result) => {
-      if (result.isConfirmed && result.value.name && result.value.price) {
+      if (result.isConfirmed && result.value) {
         try {
           await api.post('/products', result.value);
           Swal.fire('Added!', 'Product has been added.', 'success');
           fetchProducts();
         } catch (err) {
-          Swal.fire('Error', 'Failed to add product', 'error');
+          console.error(err);
+          Swal.fire('Error', err.response?.data?.message || 'Failed to add product', 'error');
         }
       }
     });
@@ -75,23 +86,34 @@ function AdminProducts() {
       showCancelButton: true,
       confirmButtonColor: '#0c8346',
       preConfirm: () => {
+        const name = document.getElementById('swal-edit-name').value.trim();
+        const price = parseFloat(document.getElementById('swal-edit-price').value);
+        const stockQuantity = parseInt(document.getElementById('swal-edit-stock').value);
+        const category = document.getElementById('swal-edit-cat').value.trim();
+        
+        if (!name || isNaN(price) || isNaN(stockQuantity) || !category) {
+          Swal.showValidationMessage('Please fill out Name, Price, Stock, and Category');
+          return false;
+        }
+
         return {
-          name: document.getElementById('swal-edit-name').value,
-          description: document.getElementById('swal-edit-desc').value,
-          price: parseFloat(document.getElementById('swal-edit-price').value),
-          stockQuantity: parseInt(document.getElementById('swal-edit-stock').value),
-          category: document.getElementById('swal-edit-cat').value,
-          imageUrl: document.getElementById('swal-edit-img').value
+          name,
+          description: document.getElementById('swal-edit-desc').value.trim(),
+          price,
+          stockQuantity,
+          category,
+          imageUrl: document.getElementById('swal-edit-img').value.trim()
         }
       }
     }).then(async (result) => {
-      if (result.isConfirmed) {
+      if (result.isConfirmed && result.value) {
         try {
           await api.put(`/products/${product.id}`, result.value);
           Swal.fire('Updated!', 'Product has been updated.', 'success');
           fetchProducts();
         } catch (err) {
-          Swal.fire('Error', 'Failed to update product', 'error');
+          console.error(err);
+          Swal.fire('Error', err.response?.data?.message || 'Failed to update product', 'error');
         }
       }
     });

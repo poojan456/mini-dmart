@@ -24,6 +24,8 @@ function Navbar() {
     });
   };
 
+
+
   let isAdmin = false;
   if (token) {
     try {
@@ -37,7 +39,7 @@ function Navbar() {
   return (
     <nav className="navbar" style={{ backgroundColor: '#fff', color: '#333', borderBottom: '1px solid #f0f0f0', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link to="/" style={{ textDecoration: 'none' }}>
+        <Link to={isAdmin ? "/admin" : "/"} style={{ textDecoration: 'none' }}>
           <h2 style={{ 
             fontFamily: '"Arial Black", Impact, sans-serif', 
             fontWeight: 900, 
@@ -51,16 +53,15 @@ function Navbar() {
           </h2>
         </Link>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <Link to="/" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>Home</Link>
-          {isAdmin && (
-            <Link to="/admin" style={{ color: '#0c8346', textDecoration: 'none', fontWeight: 'bold', backgroundColor: '#e8f5e9', padding: '4px 10px', borderRadius: '4px' }}>
-              Admin Panel
-            </Link>
-          )}
+          {!isAdmin && <Link to="/" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>Home</Link>}
           {token ? (
             <>
-              <Link to="/cart" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}><ShoppingCart size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Cart</Link>
-              <Link to="/orders" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>My Orders</Link>
+              {!isAdmin && (
+                <>
+                  <Link to="/cart" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}><ShoppingCart size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Cart</Link>
+                  <Link to="/orders" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}>My Orders</Link>
+                </>
+              )}
               <Link to="/profile" style={{ color: '#333', textDecoration: 'none', fontWeight: '600' }}><User size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: '4px' }}/> Profile</Link>
               <button onClick={handleLogout} className="btn" style={{ background: 'transparent', color: '#dc3545', fontWeight: 'bold', marginLeft: '10px', verticalAlign: 'middle', border: '1px solid #dc3545', padding: '6px 12px', borderRadius: '6px' }}>
                 <LogOut size={16} style={{ display: 'inline', verticalAlign: 'middle' }}/> Logout

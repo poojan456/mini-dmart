@@ -72,28 +72,44 @@ function AdminOverview() {
       
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '40px' }}>
-        <div style={cardStyle}>
+        <div 
+          style={cardStyle}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; }}
+        >
           <div style={iconBoxStyle('#e8f5e9', '#0c8346')}><Package size={24} /></div>
           <div>
             <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Total Products</p>
             <h3 style={{ margin: 0, fontSize: '24px', color: '#333' }}>{stats.totalProducts}</h3>
           </div>
         </div>
-        <div style={cardStyle}>
+        <div 
+          style={cardStyle}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; }}
+        >
           <div style={iconBoxStyle('#fff3e0', '#ff9900')}><ShoppingBag size={24} /></div>
           <div>
             <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Total Orders</p>
             <h3 style={{ margin: 0, fontSize: '24px', color: '#333' }}>{stats.totalOrders}</h3>
           </div>
         </div>
-        <div style={cardStyle}>
+        <div 
+          style={cardStyle}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; }}
+        >
           <div style={iconBoxStyle('#e3f2fd', '#0277bd')}><IndianRupee size={24} /></div>
           <div>
             <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Total Revenue</p>
             <h3 style={{ margin: 0, fontSize: '24px', color: '#333' }}>₹{stats.totalRevenue.toFixed(2)}</h3>
           </div>
         </div>
-        <div style={cardStyle}>
+        <div 
+          style={cardStyle}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.05)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.05)'; }}
+        >
           <div style={iconBoxStyle('#ffebee', '#d84315')}><RotateCcw size={24} /></div>
           <div>
             <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Pending Returns</p>
@@ -156,7 +172,9 @@ const cardStyle = {
   boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
   display: 'flex',
   alignItems: 'center',
-  gap: '15px'
+  gap: '15px',
+  transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
+  cursor: 'pointer'
 };
 
 const iconBoxStyle = (bgColor, color) => ({

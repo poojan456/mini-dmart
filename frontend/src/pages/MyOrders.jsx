@@ -5,6 +5,7 @@ import api from '../api/axiosConfig';
 
 function MyOrders() {
   const [orders, setOrders] = useState([]);
+  const [returns, setReturns] = useState({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,9 +14,20 @@ function MyOrders() {
 
   const fetchOrders = async () => {
     try {
-      const response = await api.get('/orders/my-orders');
-      const sorted = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      const [ordersRes, returnsRes] = await Promise.all([
+        api.get('/orders/my-orders'),
+        api.get('/returns/my-returns').catch(() => ({ data: [] }))
+      ]);
+      const sorted = ordersRes.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setOrders(sorted);
+      
+      const returnMap = {};
+      returnsRes.data.forEach(r => {
+        if (r.order && r.order.id) {
+          returnMap[r.order.id] = r;
+        }
+      });
+      setReturns(returnMap);
     } catch (err) {
       console.error(err);
       Swal.fire('Error', 'Failed to load your orders.', 'error');
@@ -120,7 +132,7 @@ function MyOrders() {
 
               {/* Action Buttons based on order status */}
               <div style={{ marginTop: '20px', display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                {order.status === 'DELIVERED' && (
+                {order.status === 'DELIVERED' && !returns[order.id] && (
                   <button 
                     className="btn btn-secondary" 
                     onClick={() => handleReturnRequest(order.id)}
@@ -134,6 +146,22 @@ function MyOrders() {
                 {order.status === 'PENDING' && (
                    <span style={{ fontSize: '13px', color: '#666', fontStyle: 'italic', alignSelf: 'center' }}>
                      Preparing order...
+                   </span>
+                )}
+                
+                {returns[order.id] && returns[order.id].status === 'PENDING' && (
+                   <span style={{ fontSize: '14px', color: '#ff9800', fontWeight: 'bold', alignSelf: 'center' }}>
+                     Return Request Pending
+                   </span>
+                )}
+                {returns[order.id] && returns[order.id].status === 'APPROVED' && (
+                   <span style={{ fontSize: '14px', color: '#4caf50', fontWeight: 'bold', alignSelf: 'center' }}>
+                     Return Accepted
+                   </span>
+                )}
+                {returns[order.id] && returns[order.id].status === 'REJECTED' && (
+                   <span style={{ fontSize: '14px', color: '#f44336', fontWeight: 'bold', alignSelf: 'center' }}>
+                     Return Rejected
                    </span>
                 )}
               </div>

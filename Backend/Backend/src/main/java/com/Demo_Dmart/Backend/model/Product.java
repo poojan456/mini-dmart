@@ -16,6 +16,7 @@ public class Product {
     @NotBlank
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @NotBlank
@@ -29,6 +30,7 @@ public class Product {
     @Min(0)
     private Integer stockQuantity;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String imageUrl;
 
     // Constructors

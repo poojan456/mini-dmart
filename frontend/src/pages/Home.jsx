@@ -182,7 +182,7 @@ function Home() {
       {/* --- END HERO BANNER --- */}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', marginBottom: '20px', gap: '15px' }}>
-        <h2 style={{ color: 'var(--primary-color)', margin: 0 }}>Dairy & Breakfast</h2>
+        <h2 style={{ color: 'var(--primary-color)', margin: 0 }}>All Products</h2>
         
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', flex: 1, justifyContent: 'flex-end' }}>
           <div style={{ position: 'relative', maxWidth: '300px', width: '100%' }}>
@@ -251,13 +251,6 @@ function Home() {
 
               {/* Meta Info */}
               <div style={{ marginTop: '12px', flexGrow: 1 }}>
-                <div style={{ 
-                  fontSize: '10px', color: '#444', backgroundColor: '#f4f4f4', 
-                  display: 'inline-flex', alignItems: 'center', padding: '3px 6px', 
-                  borderRadius: '4px', fontWeight: '700', gap: '4px' 
-                }}>
-                  ⏱ 23 MINS
-                </div>
                 
                 <div style={{ 
                   fontSize: '14px', fontWeight: '600', color: '#222', marginTop: '8px',

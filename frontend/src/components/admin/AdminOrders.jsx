@@ -70,7 +70,6 @@ function AdminOrders() {
           <thead>
             <tr style={{ backgroundColor: '#f4fbe9', color: '#0c8346' }}>
               <th style={thStyle}>Order ID</th>
-              <th style={thStyle}>Placed Date</th>
               <th style={thStyle}>Customer Email</th>
               <th style={thStyle}>Total Amount</th>
               <th style={thStyle}>Status</th>
@@ -81,7 +80,6 @@ function AdminOrders() {
             {orders.map(order => (
               <tr key={order.id} style={{ borderBottom: '1px solid #eee' }}>
                 <td style={tdStyle}>#{order.id}</td>
-                <td style={tdStyle}>{formatDate(order.orderDate)}</td>
                 <td style={tdStyle}>{order.user?.email || 'Unknown'}</td>
                 <td style={tdStyle}>₹{order.totalAmount.toFixed(2)}</td>
                 <td style={tdStyle}>
@@ -111,7 +109,7 @@ function AdminOrders() {
             ))}
             {orders.length === 0 && (
               <tr>
-                <td colSpan="6" style={{ textAlign: 'center', padding: '20px', color: '#888' }}>No orders found.</td>
+                <td colSpan="5" style={{ textAlign: 'center', padding: '20px', color: '#888' }}>No orders found.</td>
               </tr>
             )}
           </tbody>

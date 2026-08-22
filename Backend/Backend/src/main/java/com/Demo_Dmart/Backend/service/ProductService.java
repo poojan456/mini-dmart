@@ -35,6 +35,7 @@ public class ProductService {
         if (productDetails.getStockQuantity() != null) {
             product.setStockQuantity(productDetails.getStockQuantity());
         }
+        product.setImageUrl(productDetails.getImageUrl());
         return productRepository.save(product);
     }
 
