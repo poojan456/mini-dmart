@@ -2,6 +2,7 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="C:\Users\pooja\mini-dmart\Backend"/>
 			<item value="C:\Users\pooja\Downloads\Backend"/>
 		</list>
 		<list key="projectNameTemplate">
