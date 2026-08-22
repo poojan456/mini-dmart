@@ -141,7 +141,7 @@ function Home() {
       {/* --- HERO BANNER SLIDER --- */}
       <div style={{ position: 'relative', width: '100%', height: '280px', overflow: 'hidden', borderRadius: '12px', marginBottom: '40px', backgroundColor: '#f0f0f0' }}>
         {banners.map((banner, index) => (
-          <div key={banner.id} style={{
+          <div key={banner.id} className="hero-banner" style={{
             position: 'absolute',
             top: 0,
             left: 0,
@@ -150,16 +150,15 @@ function Home() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '40px',
             background: `linear-gradient(to right, ${banner.bgColor} 40%, transparent), url(${banner.imgUrl}) right/cover no-repeat`,
             backgroundColor: banner.bgColor, // fallback
             color: 'white',
             transform: `translateX(${(index - currentSlide) * 100}%)`,
             transition: 'transform 0.6s ease-in-out'
           }}>
-            <div style={{ flex: '1', zIndex: 2, maxWidth: '50%' }}>
-              <h2 style={{ fontSize: '36px', marginBottom: '15px', textShadow: '1px 1px 4px rgba(0,0,0,0.4)' }}>{banner.title}</h2>
-              <p style={{ fontSize: '18px', marginBottom: '25px', lineHeight: '1.4', textShadow: '1px 1px 3px rgba(0,0,0,0.5)' }}>{banner.subtitle}</p>
+            <div className="hero-text">
+              <h2>{banner.title}</h2>
+              <p>{banner.subtitle}</p>
               <button className="btn" style={{ backgroundColor: 'white', color: banner.bgColor, fontWeight: 'bold', padding: '10px 25px', fontSize: '16px' }}>Shop Now</button>
             </div>
           </div>
