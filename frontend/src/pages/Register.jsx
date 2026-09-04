@@ -8,6 +8,7 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -35,6 +36,7 @@ function Register() {
       return;
     }
     
+    setLoading(true);
     try {
       const payload = { name, email, password };
       
@@ -45,7 +47,17 @@ function Register() {
         navigate('/');
       }
     } catch (err) {
-      Swal.fire('Error', err.response?.data?.message || 'Registration failed', 'error');
+      if (!err.response) {
+        Swal.fire(
+          'Connection Timeout / Error',
+          'Could not reach backend API. If the backend is hosted on a free platform (Render), it may take 50-90 seconds to wake up from cold start.',
+          'error'
+        );
+      } else {
+        Swal.fire('Error', err.response?.data?.message || 'Registration failed', 'error');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,8 +108,22 @@ function Register() {
             />
           </div>
           
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '10px' }}>
-            Register
+          <button 
+            type="submit" 
+            className="btn btn-primary" 
+            disabled={loading}
+            style={{ 
+              width: '100%', 
+              marginTop: '10px', 
+              opacity: loading ? 0.7 : 1, 
+              cursor: loading ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            {loading ? 'Registering Account...' : 'Register'}
           </button>
         </form>
         <p style={{ textAlign: 'center', marginTop: '20px' }}>

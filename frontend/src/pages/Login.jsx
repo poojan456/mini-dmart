@@ -6,10 +6,12 @@ import api from '../api/axiosConfig';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const response = await api.post('/auth/login', { email, password });
       const token = response.data.token;
@@ -31,7 +33,17 @@ function Login() {
         navigate('/');
       }
     } catch (err) {
-      Swal.fire('Error', err.response?.data?.message || 'Invalid credentials', 'error');
+      if (!err.response) {
+        Swal.fire(
+          'Connection Timeout / Error',
+          'Could not reach backend API. If the backend is on a free host like Render, it may take 50-90 seconds to wake up from sleep. Please check VITE_API_URL settings on Vercel.',
+          'error'
+        );
+      } else {
+        Swal.fire('Error', err.response?.data?.message || 'Invalid credentials', 'error');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,11 +109,18 @@ function Login() {
               required 
               style={{ width: '100%', padding: '12px 15px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '15px', outline: 'none' }}
             />
-            <button type="submit" style={{ 
-              width: '100%', padding: '14px', borderRadius: '8px', border: 'none', backgroundColor: '#0c8346', 
-              color: '#fff', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer', marginTop: '10px' 
-            }}>
-              Continue
+            <button 
+              type="submit" 
+              disabled={loading}
+              style={{ 
+                width: '100%', padding: '14px', borderRadius: '8px', border: 'none', 
+                backgroundColor: loading ? '#8bc34a' : '#0c8346', 
+                color: '#fff', fontSize: '16px', fontWeight: 'bold', 
+                cursor: loading ? 'not-allowed' : 'pointer', marginTop: '10px',
+                display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px'
+              }}
+            >
+              {loading ? 'Connecting & Logging In...' : 'Continue'}
             </button>
           </form>
 

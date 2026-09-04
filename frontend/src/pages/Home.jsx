@@ -134,7 +134,15 @@ function Home() {
   };
 
   if (loading) {
-    return <div className="container" style={{ textAlign: 'center', marginTop: '50px' }}><h3>Loading Products...</h3></div>;
+    return (
+      <div className="container" style={{ textAlign: 'center', marginTop: '60px', padding: '20px' }}>
+        <div style={{ fontSize: '28px', marginBottom: '15px' }}>⏳</div>
+        <h3 style={{ color: '#0c8346' }}>Connecting to Store...</h3>
+        <p style={{ color: '#666', fontSize: '14px', maxWidth: '420px', margin: '10px auto', lineHeight: '1.5' }}>
+          Loading products from the server. If this is your first visit or the backend was inactive, it may take 40–60 seconds to wake up.
+        </p>
+      </div>
+    );
   }
 
   return (
